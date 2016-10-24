@@ -4,28 +4,45 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
+using WebApplicationBasic.Models;
+
 namespace WebApplicationBasic.Controllers
 {
     public class HomeController : Controller
     {
+
+        private MusicContext _context;
+
+        public HomeController(MusicContext context)
+        {
+            _context = context;
+        }
+
         public IActionResult Index()
         {
-            return View();
+            return View(_context.Albums.ToList());
         }
 
-        public IActionResult About()
+        public IActionResult Create()
         {
-            ViewData["Message"] = "Your application description page.";
-
-            return View();
+            return View(new Album());
         }
 
-        public IActionResult Contact()
+        [HttpPost] // defining this to accept a POST
+        [ValidateAntiForgeryToken] // setting up form Security
+        public IActionResult Create(Album item) // defining route
         {
-            ViewData["Message"] = "Your contact page.";
-
-            return View();
+            if (ModelState.IsValid) // Checks if the Model is valid
+            {
+                _context.Albums.Add(item); // Stages commits to the database
+                _context.SaveChanges(); // Commits changes to the database
+                return RedirectToAction("Index"); //redirects to the home
+            }
+            return View(item); // back to Create page is something is wrong
         }
+
+
+
 
         public IActionResult Error()
         {
