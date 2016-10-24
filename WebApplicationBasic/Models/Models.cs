@@ -21,5 +21,6 @@ namespace WebApplicationBasic.Models
     {
         public int AlbumId { get; set; }
         public string Name { get; set; }
+        public string ImageUrl { get; set; }
     }
 }

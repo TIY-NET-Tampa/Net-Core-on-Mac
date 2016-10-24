@@ -41,9 +41,6 @@ namespace WebApplicationBasic.Controllers
             return View(item); // back to Create page is something is wrong
         }
 
-
-
-
         public IActionResult Error()
         {
             return View();

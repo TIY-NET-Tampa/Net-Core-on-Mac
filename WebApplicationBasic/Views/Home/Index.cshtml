@@ -1,21 +1,28 @@
 @model IEnumerable<WebApplicationBasic.Models.Album>
 
-@{ ViewData["Title"] = "Home Page"; }
-<div class="row">
-    @if (Model.Count() > 0){
+    @{ ViewData["Title"] = "Home Page"; }
+    <br/>
+    <div class="row">
+        @if (Model.Count() > 0){ 
             @foreach (var item in Model) {
-            <div class="col-sm-6">
-                <p>
-                    @Html.DisplayFor(modelItem => item.AlbumId)
-                </p>
-                <p>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </p>
-            </div>
+                <div class="col-md-4">
+                    <div class="thumbnail">
+                        <p class="">
+                            @if (String.IsNullOrWhiteSpace(item.ImageUrl)){
+                                <img class="album-art" src="https://static.pexels.com/photos/167092/pexels-photo-167092.jpeg">
+                            }
+                            else {
+                                <img class="album-art" src="@item.ImageUrl"> 
+                            }
+                        </p>
+                        <p>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </p>
+                    </div>
+                </div>
+            }
         }
-    } @if (Model.Count() == 0){
-        <p>No Albums found</p>
-    }
-</div>
-
-    
+        else {
+            <p>No Albums found</p>
+        }
+    </div>
