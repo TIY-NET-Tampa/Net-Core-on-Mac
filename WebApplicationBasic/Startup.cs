@@ -8,6 +8,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
+using WebApplicationBasic.Models;
+
 namespace WebApplicationBasic
 {
     public class Startup
@@ -29,13 +31,23 @@ namespace WebApplicationBasic
         {
             // Add framework services.
             services.AddMvc();
+            
+            // EF DB
+            services.AddDbContext<MusicContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddDebug();
+            loggerFactory.AddConsole(minLevel: LogLevel.Debug);
+            var logger = loggerFactory.CreateLogger("Development");
+
+            app.Use(async (context, next) =>
+            {
+                logger.LogInformation($"Handling Request for {context.Request.Path}");
+                await next.Invoke();
+                logger.LogInformation($"Finished Request for {context.Request.Path}");
+            });
 
             if (env.IsDevelopment())
             {
