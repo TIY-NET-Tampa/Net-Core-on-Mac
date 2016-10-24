@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-
+using Microsoft.EntityFrameworkCore;
 using WebApplicationBasic.Models;
 
 namespace WebApplicationBasic.Controllers
@@ -39,6 +39,17 @@ namespace WebApplicationBasic.Controllers
                 return RedirectToAction("Index"); //redirects to the home
             }
             return View(item); // back to Create page is something is wrong
+        }
+
+        [HttpPost] // defining this to accept a POST
+        [ValidateAntiForgeryToken] // setting up form Security
+        public IActionResult Remove(int albumId) // defining route
+        {
+            var album = new Album { AlbumId = albumId };
+            _context.Albums.Attach(album);
+            _context.Entry(album).State = EntityState.Deleted;
+            _context.SaveChanges();
+            return RedirectToAction("Index");
         }
 
         public IActionResult Error()
